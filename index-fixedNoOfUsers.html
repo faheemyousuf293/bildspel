@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .outer-container {
+      width: 100%;
+      overflow-x: hidden; /* Disable horizontal scrolling */
+    }
+
+    .page-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      white-space: nowrap; /* Ensure users stay in a single row */
+      transition: transform 0.5s ease; /* Smooth transition for animation */
+    }
+
+    .user {
+      text-align: center;
+    }
+
+    .user img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="outer-container">
+    <div class="page-container"></div>
+  </div>
+
+  <script>
+    const users = [
+      { name: 'Faheem Yousuf', title: 'Developer', image: 'assets/images/dummy.png' },
+      { name: 'Anto', title: 'Designer', image: 'assets/images/dummy.png' },
+      { name: 'User 3', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 4', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 5', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 6', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 7', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 8', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 9', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 10', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 11', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 12', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 13', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 14', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 15', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 16', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 17', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 18', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 19', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 20', title: 'Title 2', image: 'assets/images/dummy.png' },
+      // Add more users here
+    ];
+
+    const usersPerPage = 10; // Number of users per page
+    const slideInterval = 3000; // Slide interval in milliseconds
+
+    let currentPage = 0; // Current page for pagination
+    let slideTimer; // Timer for automatic sliding
+
+    // Function to create user elements
+    function createUserElement(user) {
+      const div = document.createElement('div');
+      div.classList.add('user');
+
+      const img = document.createElement('img');
+      img.src = user.image;
+      img.alt = user.name;
+
+      const name = document.createElement('div');
+      name.textContent = user.name;
+
+      const title = document.createElement('div');
+      title.textContent = user.title;
+
+      div.appendChild(img);
+      div.appendChild(name);
+      div.appendChild(title);
+
+      return div;
+    }
+
+    // Function to render users for the current page
+    function renderUsers() {
+      const container = document.querySelector('.page-container');
+      container.innerHTML = '';
+
+      const start = currentPage * usersPerPage;
+      const end = start + usersPerPage;
+      const usersToShow = users.slice(start, end);
+
+      usersToShow.forEach(user => {
+        const userElement = createUserElement(user);
+        container.appendChild(userElement);
+      });
+    }
+
+    // Function to slide to the next page
+    function slideToNextPage() {
+      currentPage = (currentPage + 1) % Math.ceil(users.length / usersPerPage);
+      renderUsers();
+    }
+
+    // Function to start automatic sliding
+    function startAutoSlide() {
+      slideTimer = setInterval(slideToNextPage, slideInterval);
+    }
+
+    // Function to stop automatic sliding
+    function stopAutoSlide() {
+      clearInterval(slideTimer);
+    }
+
+    // Initial render
+    renderUsers();
+    startAutoSlide(); // Start automatic sliding
+
+    // Handle window resize
+    window.addEventListener('resize', renderUsers);
+  </script>
+</body>
+</html>

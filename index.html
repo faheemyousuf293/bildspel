@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .outer-container {
+      width: 100%;
+      height: 100vh; /* Set the height of the container to match the viewport height */
+      overflow-x: hidden; /* Disable horizontal scrolling */
+    }
+
+    .page-container {
+      display: grid;
+      gap: 20px;
+      padding: 20px;
+      transition: transform 0.5s ease; /* Smooth transition for animation */
+    }
+
+    .user {
+      text-align: center;
+    }
+
+    .user img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="outer-container">
+    <div class="page-container"></div>
+  </div>
+
+  <script>
+    const users = [
+      { name: 'Faheem Yousuf', title: 'Developer', image: 'assets/images/dummy.png' },
+      { name: 'Anto', title: 'Designer', image: 'assets/images/dummy.png' },
+      { name: 'User 3', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 4', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 5', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 6', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 7', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 8', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 9', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 10', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 11', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 12', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 13', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 14', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 15', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 16', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 17', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 18', title: 'Title 2', image: 'assets/images/dummy.png' },
+      { name: 'User 19', title: 'Title 1', image: 'assets/images/dummy.png' },
+      { name: 'User 20', title: 'Title 2', image: 'assets/images/dummy.png' },
+      // Add more users here
+    ];
+
+    let usersPerPage; // Number of users per page
+    let currentPage = 0; // Current page for pagination
+    let slideTimer; // Timer for automatic sliding
+
+    // Function to create user elements
+    function createUserElement(user) {
+      const div = document.createElement('div');
+      div.classList.add('user');
+
+      const img = document.createElement('img');
+      img.src = user.image;
+      img.alt = user.name;
+
+      const name = document.createElement('div');
+      name.textContent = user.name;
+
+      const title = document.createElement('div');
+      title.textContent = user.title;
+
+      div.appendChild(img);
+      div.appendChild(name);
+      div.appendChild(title);
+
+      return div;
+    }
+
+    // Function to calculate the number of users per page based on available space
+    function calculateUsersPerPage() {
+      const containerWidth = document.querySelector('.outer-container').clientWidth;
+      const containerHeight = window.innerHeight; // Get the window's height
+      const minUserWidth = 200; // Minimum width of a user element
+      const minUserHeight = 140; // Minimum height of a user element
+      const gap = 20; // Gap between user elements
+
+      const columns = Math.floor((containerWidth + gap) / (minUserWidth + gap));
+      const rows = Math.floor((containerHeight + gap) / (minUserHeight + gap));
+
+      usersPerPage = Math.max(1, Math.min(columns * rows, users.length)); // Ensure at least 1 user per page and not exceeding total users
+    }
+
+    // Function to render users for the current page
+    function renderUsers() {
+      const container = document.querySelector('.page-container');
+      container.innerHTML = '';
+
+      const start = currentPage * usersPerPage;
+      const end = start + usersPerPage;
+      const usersToShow = users.slice(start, end);
+
+      container.style.gridTemplateColumns = `repeat(auto-fill, minmax(200px, 1fr))`; // Reset grid columns to auto-fill
+      container.style.gridAutoRows = 'auto'; // Reset grid rows to auto
+
+      usersToShow.forEach(user => {
+        const userElement = createUserElement(user);
+        container.appendChild(userElement);
+      });
+    }
+
+    // Function to slide to the next page
+    function slideToNextPage() {
+      currentPage = (currentPage + 1) % Math.ceil(users.length / usersPerPage);
+      renderUsers();
+    }
+
+    // Function to start automatic sliding
+    function startAutoSlide() {
+      slideTimer = setInterval(slideToNextPage, 3000); // Adjust the interval as needed
+    }
+
+    // Function to stop automatic sliding
+    function stopAutoSlide() {
+      clearInterval(slideTimer);
+    }
+
+    // Initial setup
+    calculateUsersPerPage();
+    renderUsers();
+    startAutoSlide(); // Start automatic sliding
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      calculateUsersPerPage();
+      renderUsers();
+    });
+  </script>
+</body>
+</html>
